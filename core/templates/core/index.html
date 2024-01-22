@@ -16,30 +16,27 @@
     <title>Form </title>
   </head>
   <body>
-
+    <h1 class="text-center mt-5">Add Profiles</h1>
     <div class="container">
+        
+
         <form class=" my-5"  method = "post" autocomplete="off" id = "testform">
             {%csrf_token%}
             <!-- {%csrf_token%} -->
+            <h1 class="alert alert-danger none d-none"  id = "message"></h1>
             <div id="showItem">
                 <div class="row">
                     <div class="form-group mx-sm-3 mb-2">
                         <label for="inputPassword2" class="sr-only">Name</label>
-                        <input type="text" class="form-control"  name = "name" placeholder="Name">
+                        <input type="text" class="form-control inputs"  name = "name" placeholder="Name">
                       </div>
                     <div class="form-group mx-sm-3 mb-2">
                       <label for="inputPassword2" class="sr-only">Address</label>
-                      <input type="text" class="form-control" name = "address" placeholder="Address">
+                      <input type="text" class="form-control inputs" name = "address" placeholder="Address">
                     </div>
                     <div class="mt-2">
                    </div> 
                 </div>
-
-               
-                
-
-                
-                
             </div>
             <div>
                 <button class="btn btn-success" id="submit">submit</button>
@@ -62,16 +59,17 @@
             $(wrapper).append(
                 `
                 <div class="row">
+
                     <div class="form-group mx-sm-3 mb-2">
                         <label for="inputPassword2" class="sr-only">Name</label>
-                        <input type="text" class="form-control" name = "name" placeholder="Name">
+                        <input type="text" class="form-control inputs" name = "name" placeholder="Name">
                       </div>
                     <div class="form-group mx-sm-3 mb-2">
                       <label for="inputPassword2" class="sr-only">Address</label>
-                      <input type="text" class="form-control"name = "address"  placeholder="Address">
+                      <input type="text" class="form-control inputs"name = "address"  placeholder="Address">
                     </div>
                     <div class="mt-2">
-                        <a  class="btn btn-danger mb-2 color-white removeBtn"  data-id ="1" id="removeItemBtn">Remove </a>
+                        <a  style ="color:white" class="btn btn-danger mb-2 color-white removeBtn"  data-id ="1" id="removeItemBtn">Remove </a>
                    </div> 
                 </div>
                 `
@@ -118,7 +116,9 @@
 
             var datas = {}
             if (name.length>0 && address.length>0)
-            {
+
+            {   
+
                 datas['csrfmiddlewaretoken'] =csrf[0].value
                 datas['names'] = name
                 datas['address'] = address
@@ -127,12 +127,49 @@
                 url: '/submit/',
                 data: datas,
                 dataType: 'json',
-                success: function(){
-                    console.log("hello world")
+                success: function(res){
+                    const alert = document.getElementById('message')
+                    setTimeout(()=>{ 
+                        alert.classList.add('d-none')
+                    },2000)
+                    alert.classList.remove('d-none')
+                    alert.classList.remove('alert-danger')
+                    alert.classList.add('alert-success')
+                    alert.innerText = res.message
+                    const wrappers = document.getElementById('showItem')
+                    wrappers.innerHTML =  `
+                    <div class="row">
+
+                        <div class="form-group mx-sm-3 mb-2">
+                            <label for="inputPassword2" class="sr-only">Name</label>
+                            <input type="text" class="form-control inputs" name = "name" placeholder="Name">
+                        </div>
+                        <div class="form-group mx-sm-3 mb-2">
+                        <label for="inputPassword2" class="sr-only">Address</label>
+                        <input type="text" class="form-control inputs"name = "address"  placeholder="Address">
+                        </div>
+                        <div class="mt-2">
+                            <a  style ="color:white" class="btn btn-danger mb-2 color-white removeBtn"  data-id ="1" id="removeItemBtn">Remove </a>
+                    </div> 
+                    </div>
+                    `
+
+                   
+                    
                 }
+
             });
             }
-            console.log(datas)
+            else{ 
+                const alert = document.getElementById('message')
+                setTimeout(()=>{ 
+                    alert.classList.add('d-none')
+                },1200)
+                alert.classList.remove('d-none')
+                alert.innerText = "The fields are empty"
+                
+
+            }
             
             
             
